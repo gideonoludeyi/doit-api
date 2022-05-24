@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { hashSync } from 'bcryptjs';
+import { compareSync, hashSync } from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -24,5 +24,18 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+  }
+
+  async login(email: string, password: string) {
+    const account = await this.prisma.account.findUnique({
+      where: { email },
+    });
+
+    if (!account) throw new Error('Account not found');
+
+    const isCorrectPassword = compareSync(password, account.password);
+    if (!isCorrectPassword) throw new Error('Incorrect password');
+
+    return account;
   }
 }
