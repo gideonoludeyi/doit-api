@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskDto } from './dto/task.dto';
@@ -8,7 +9,7 @@ export class TaskService {
   constructor(private prisma: PrismaService) {}
 
   async create(authorId: string, dto: CreateTaskDto): Promise<string> {
-    const id = `${Math.random() * 100_000}`;
+    const id = nanoid();
     await this.prisma.task.create({
       data: {
         id,
