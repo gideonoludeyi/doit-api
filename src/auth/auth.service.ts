@@ -23,6 +23,12 @@ export class AuthService {
         email,
         password: hashedPassword,
       },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
@@ -36,6 +42,11 @@ export class AuthService {
     const isCorrectPassword = compareSync(password, account.password);
     if (!isCorrectPassword) throw new Error('Incorrect password');
 
-    return account;
+    return {
+      id: account.id,
+      email: account.email,
+      createdAt: account.createdAt,
+      updatedAt: account.updatedAt,
+    };
   }
 }
